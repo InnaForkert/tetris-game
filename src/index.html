@@ -7,9 +7,26 @@
     <title>Document</title>
     <link rel="stylesheet" href="./sass/index.scss" />
     <script type="module" src="./scripts/playground.js"></script>
+    <script type="module" src="./scripts/form.js"></script>
     <script type="module" src="./scripts/rocket.js"></script>
   </head>
   <body>
+    <form class="form-js">
+      <label>
+        Please, enter your name:
+        <input type="text" name="name" />
+      </label>
+      <p>Wanna play with bot?</p>
+      <label>
+        <input type="radio" name="bot" value="true" />
+        Yes
+      </label>
+      <label>
+        <input type="radio" name="bot" value="false" />
+        No
+      </label>
+      <button type="submit">Submit</button>
+    </form>
     <div class="playground" id="playground"></div>
   </body>
 </html>
