@@ -1,0 +1,20 @@
+.playground {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  width: 500px;
+  height: 650px;
+  border: 1px solid black;
+  margin: 0 auto;
+  cursor: none;
+}
+
+.small-div {
+  width: 10px;
+  height: 10px;
+  outline: 1px solid rgba(0, 0, 0, 0.062);
+}
+
+.chosen-div {
+  background-color: rgba(0, 0, 0, 0.647);
+}
