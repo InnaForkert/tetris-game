@@ -1,2 +1,0 @@
-const e=document.getElementById("playground");e.addEventListener("mouseover",(function(e){e.target.classList.add("chosen-div")})),e.addEventListener("mouseout",(function(e){e.target.classList.remove("chosen-div")})),function(){const t=[];for(let e=0;e<3250;e+=1){const e=document.createElement("div");e.classList.add("small-div"),t.push(e)}null==e||e.append(...t)}();
-//# sourceMappingURL=index.96708af7.js.map
