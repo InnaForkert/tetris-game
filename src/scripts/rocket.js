@@ -11,10 +11,22 @@ smallDivs.forEach(div => {
 });
 let gameInProgress = false;
 let ballPosition;
+let interval;
 
 function selectChosen(e) {
   const id = getCurrentPosition(e);
   const coord = id % 50;
+  const rocket = buildRocket(coord);
+  rocket.forEach(div => {
+    div.classList.add('chosen-div');
+  });
+  if (!gameInProgress) {
+    paintBall(3150 + coord);
+    ballPosition = 3150 + coord;
+  }
+}
+
+function buildRocket(coord) {
   const rocket = [
     groundDivs[coord - 3],
     groundDivs[coord - 2],
@@ -24,13 +36,7 @@ function selectChosen(e) {
     groundDivs[coord + 2],
     groundDivs[coord + 3],
   ];
-  rocket.forEach(div => {
-    div.classList.add('chosen-div');
-  });
-  if (!gameInProgress) {
-    paintBall(3150 + coord);
-    ballPosition = 3150 + coord;
-  }
+  return rocket;
 }
 
 function getCurrentPosition(e) {
@@ -41,15 +47,7 @@ function getCurrentPosition(e) {
 function unselectChosen(e) {
   const id = getCurrentPosition(e);
   const coord = id % 50;
-  const rocket = [
-    groundDivs[coord - 3],
-    groundDivs[coord - 2],
-    groundDivs[coord - 1],
-    groundDivs[coord],
-    groundDivs[coord + 1],
-    groundDivs[coord + 2],
-    groundDivs[coord + 3],
-  ];
+  const rocket = buildRocket(coord);
   rocket.forEach(div => {
     div.classList.remove('chosen-div');
   });
@@ -67,7 +65,7 @@ function startBallMovement(e) {
   gameInProgress = true;
   const id = getCurrentPosition(e) % 50;
   playground.removeEventListener('click', startBallMovement);
-  setInterval(() => defineNextPosition(), 100);
+  interval = setInterval(() => defineNextPosition(), 40);
 }
 
 let step = -49;
@@ -83,6 +81,16 @@ function defineNextPosition() {
   }
   if (ballPosition < 50) {
     step = -step + correction;
+  }
+  if (ballPosition > 3150 && step > 0) {
+    if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
+      step = -step + correction;
+    } else {
+      paintBall(ballPosition + step);
+      setTimeout(() => alert('You lose!'), 0);
+      clearInterval(interval);
+      return;
+    }
   }
   ballPosition += step;
   paintBall(ballPosition);
