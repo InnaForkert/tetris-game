@@ -10,6 +10,7 @@ smallDivs.forEach(div => {
   }
 });
 let gameInProgress = false;
+let ballPosition;
 
 function selectChosen(e) {
   const id = getCurrentPosition(e);
@@ -26,7 +27,10 @@ function selectChosen(e) {
   rocket.forEach(div => {
     div.classList.add('chosen-div');
   });
-  carryBall(coord);
+  if (!gameInProgress) {
+    paintBall(3150 + coord);
+    ballPosition = 3150 + coord;
+  }
 }
 
 function getCurrentPosition(e) {
@@ -49,20 +53,25 @@ function unselectChosen(e) {
   rocket.forEach(div => {
     div.classList.remove('chosen-div');
   });
-  uncarryBall(coord);
+  unpaintBall(3150 + coord);
 }
 
-function carryBall(coord) {
-  if (!gameInProgress) {
-    smallDivs[3150 + coord].classList.add('chosen-div');
-  }
+function paintBall(coord) {
+  smallDivs[coord].classList.add('chosen-div');
 }
-function uncarryBall(coord) {
-  smallDivs[3150 + coord].classList.remove('chosen-div');
+function unpaintBall(coord) {
+  smallDivs[coord].classList.remove('chosen-div');
 }
 
 function startBallMovement(e) {
   gameInProgress = true;
   const id = getCurrentPosition(e) % 50;
-  uncarryBall(id);
+  playground.removeEventListener('click', startBallMovement);
+  setInterval(() => defineNextPosition(), 200);
+}
+
+function defineNextPosition() {
+  unpaintBall(ballPosition);
+  ballPosition -= 49;
+  paintBall(ballPosition);
 }
