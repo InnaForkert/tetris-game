@@ -67,11 +67,23 @@ function startBallMovement(e) {
   gameInProgress = true;
   const id = getCurrentPosition(e) % 50;
   playground.removeEventListener('click', startBallMovement);
-  setInterval(() => defineNextPosition(), 200);
+  setInterval(() => defineNextPosition(), 100);
 }
 
+let step = -49;
+let correction = 2;
 function defineNextPosition() {
   unpaintBall(ballPosition);
-  ballPosition -= 49;
+  if (ballPosition % 50 === 49) {
+    step -= correction;
+    correction = -2;
+  } else if (ballPosition % 50 === 0) {
+    step -= correction;
+    correction = 2;
+  }
+  if (ballPosition < 50) {
+    step = -step + correction;
+  }
+  ballPosition += step;
   paintBall(ballPosition);
 }
