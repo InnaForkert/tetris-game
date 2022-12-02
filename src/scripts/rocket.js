@@ -63,7 +63,6 @@ function unpaintBall(coord) {
 
 function startBallMovement(e) {
   gameInProgress = true;
-  const id = getCurrentPosition(e) % 50;
   playground.removeEventListener('click', startBallMovement);
   interval = setInterval(() => defineNextPosition(), 40);
 }
@@ -87,9 +86,13 @@ function defineNextPosition() {
       step = -step + correction;
     } else {
       paintBall(ballPosition + step);
-      setTimeout(() => alert('You lose!'), 0);
+      setTimeout(() => {
+        unpaintBall(ballPosition);
+        alert('You lose!');
+      }, 50);
       clearInterval(interval);
-      return;
+      playground.addEventListener('click', startBallMovement);
+      gameInProgress = false;
     }
   }
   ballPosition += step;
