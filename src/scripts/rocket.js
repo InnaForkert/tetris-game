@@ -10,7 +10,8 @@ smallDivs.forEach(div => {
 });
 
 function selectChosen(e) {
-  const coord = e.target.dataset.id % 50;
+  const id = e.target.dataset.id;
+  const coord = id % 50;
   const rocket = [
     groundDivs[coord - 3],
     groundDivs[coord - 2],
@@ -23,10 +24,12 @@ function selectChosen(e) {
   rocket.forEach(div => {
     div.classList.add('chosen-div');
   });
+  carryBall(coord);
 }
 
 function unselectChosen(e) {
-  const coord = e.target.dataset.id % 50;
+  const id = e.target.dataset.id;
+  const coord = id % 50;
   const rocket = [
     groundDivs[coord - 3],
     groundDivs[coord - 2],
@@ -39,4 +42,12 @@ function unselectChosen(e) {
   rocket.forEach(div => {
     div.classList.remove('chosen-div');
   });
+  uncarryBall(coord);
+}
+
+function carryBall(coord) {
+  smallDivs[3150 + coord].classList.add('chosen-div');
+}
+function uncarryBall(coord) {
+  smallDivs[3150 + coord].classList.remove('chosen-div');
 }
