@@ -1,5 +1,6 @@
 playground.addEventListener('mouseover', selectChosen);
 playground.addEventListener('mouseout', unselectChosen);
+playground.addEventListener('click', startBallMovement);
 
 const groundDivs = [];
 const smallDivs = document.querySelectorAll('.small-div');
@@ -8,9 +9,10 @@ smallDivs.forEach(div => {
     groundDivs.push(div);
   }
 });
+let gameInProgress = false;
 
 function selectChosen(e) {
-  const id = e.target.dataset.id;
+  const id = getCurrentPosition(e);
   const coord = id % 50;
   const rocket = [
     groundDivs[coord - 3],
@@ -27,8 +29,13 @@ function selectChosen(e) {
   carryBall(coord);
 }
 
-function unselectChosen(e) {
+function getCurrentPosition(e) {
   const id = e.target.dataset.id;
+  return id;
+}
+
+function unselectChosen(e) {
+  const id = getCurrentPosition(e);
   const coord = id % 50;
   const rocket = [
     groundDivs[coord - 3],
@@ -46,8 +53,16 @@ function unselectChosen(e) {
 }
 
 function carryBall(coord) {
-  smallDivs[3150 + coord].classList.add('chosen-div');
+  if (!gameInProgress) {
+    smallDivs[3150 + coord].classList.add('chosen-div');
+  }
 }
 function uncarryBall(coord) {
   smallDivs[3150 + coord].classList.remove('chosen-div');
+}
+
+function startBallMovement(e) {
+  gameInProgress = true;
+  const id = getCurrentPosition(e) % 50;
+  uncarryBall(id);
 }
