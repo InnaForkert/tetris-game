@@ -9,4 +9,15 @@ const playground = document.querySelector('#playground');
     divs.push(smallDiv);
   }
   playground?.append(...divs);
+  const smallDivs = document.querySelectorAll('.small-div');
+  generateFieldies(smallDivs);
 })();
+
+function generateFieldies(list) {
+  list.forEach((div, idx) => {
+    let rand = Math.random();
+    if (idx < 1700 && idx > 300) {
+      div.classList.add('chosen-div');
+    }
+  });
+}
