@@ -70,11 +70,6 @@ function startBallMovement(e) {
 let step = -49;
 let correction = 2;
 
-//step = -49;right top
-//step = 49; left bottom
-//step = 51; rigth bottom
-//step = -51; left top
-
 function defineNextPosition() {
   unpaintBall(ballPosition);
   hitWall();
@@ -108,11 +103,52 @@ function hitFieldy(pos) {
     // window.requestAnimationFrame(() => hitFieldy(ballPosition));
   }
 }
+//step = -49;right top
+//step = 51; rigth bottom
 
 function hitRT() {
-  if (smallDivs[ballPosition - 1].classList.contains('chosen-div')) {
-    unpaintBall(ballPosition - 1);
+  if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
+    unpaintBall(ballPosition - 50);
     step = -step + correction;
+  } else {
+    unpaintBall(ballPosition - 49);
+    step = -step;
+    correction = -correction;
+  }
+}
+//step = -51; left top
+
+function hitLT() {
+  if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
+    unpaintBall(ballPosition - 50);
+    step = -step + correction;
+  } else {
+    unpaintBall(ballPosition - 51);
+    step = -step;
+    correction = -correction;
+  }
+}
+//step = 49; left bottom
+
+function hitLB() {
+  if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
+    unpaintBall(ballPosition + 50);
+    step = -step + correction;
+  } else {
+    unpaintBall(ballPosition + 49);
+    step = -step;
+    correction = -correction;
+  }
+}
+
+function hitRB() {
+  if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
+    unpaintBall(ballPosition + 50);
+    step = -step + correction;
+  } else {
+    unpaintBall(ballPosition + 51);
+    step = -step;
+    correction = -correction;
   }
 }
 
