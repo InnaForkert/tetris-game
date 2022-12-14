@@ -1,8 +1,11 @@
+//додаємо слухач подій на поле на рух курсора в та з поля
 playground.addEventListener('mouseover', selectChosen);
 playground.addEventListener('mouseout', unselectChosen);
 playground.addEventListener('click', startBallMovement);
 
+//створюємо пустий масив для нижнього ряду квадратиків, де буде рухатись ракетка
 const groundDivs = [];
+//обираємо усі квадратики та додаємо у порожній масив нижній ряд
 const smallDivs = document.querySelectorAll('.small-div');
 smallDivs.forEach(div => {
   if (div.dataset.id > 3199) {
@@ -13,12 +16,13 @@ let gameInProgress = false;
 let ballPosition;
 let interval;
 
+//рух мишки у квадратик
 function selectChosen(e) {
   const id = getCurrentPosition(e);
   const coord = id % 50;
   const rocket = buildRocket(coord);
   rocket.forEach(div => {
-    div.classList.add('chosen-div');
+    if (div) div.classList.add('chosen-div');
   });
   if (!gameInProgress) {
     paintBall(3150 + coord);
@@ -49,7 +53,7 @@ function unselectChosen(e) {
   const coord = id % 50;
   const rocket = buildRocket(coord);
   rocket.forEach(div => {
-    div.classList.remove('chosen-div');
+    if (div) div.classList.remove('chosen-div');
   });
   unpaintBall(3150 + coord);
 }

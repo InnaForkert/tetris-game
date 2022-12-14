@@ -1,5 +1,5 @@
 const playground = document.querySelector('#playground');
-
+//створюємо поле, щоб монжа було окремо звертатись до кожного квадратика
 (function createField() {
   const divs = [];
   for (let i = 0; i < 3250; i += 1) {
@@ -11,6 +11,7 @@ const playground = document.querySelector('#playground');
   playground?.append(...divs);
   const smallDivs = document.querySelectorAll('.small-div');
   generateFieldies(smallDivs);
+
 })();
 
 function generateFieldies(list) {
