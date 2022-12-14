@@ -178,6 +178,7 @@ function hitFloor() {
       step = -step + correction;
     } else {
       paintBall(ballPosition + step);
+      ballPosition+=step;
       setTimeout(() => {
         unpaintBall(ballPosition);
         alert('You lose!');
