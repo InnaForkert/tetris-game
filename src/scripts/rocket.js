@@ -65,14 +65,13 @@ function unpaintBall(coord) {
   smallDivs[coord].classList.remove('chosen-div');
 }
 
-function startBallMovement(e) {
+function startBallMovement() {
   gameInProgress = true;
   playground.removeEventListener('click', startBallMovement);
   interval = setInterval(() => defineNextPosition(), 50);
 }
 
 let step = -49;
-let correction = 2;
 
 function defineNextPosition() {
   unpaintBall(ballPosition);
@@ -100,24 +99,17 @@ function hitFieldy(pos) {
         hitLT();
         break;
     }
-    // unpaintBall(ballPosition);
-    // console.log('hit');
-    // ballPosition -= step;
-    // step = -step + correction;
-    // window.requestAnimationFrame(() => hitFieldy(ballPosition));
   }
 }
 //step = -49;right top
-//step = 51; rigth bottom
 
 function hitRT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    step = -step + correction;
+    step = 51
   } else {
     unpaintBall(ballPosition - 49);
-    step = -step;
-    correction = -correction;
+    step = -49;
   }
 }
 //step = -51; left top
@@ -125,11 +117,10 @@ function hitRT() {
 function hitLT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    step = -step + correction;
+    step = 49
   } else {
     unpaintBall(ballPosition - 51);
-    step = -step;
-    correction = -correction;
+    step = 51;
   }
 }
 //step = 49; left bottom
@@ -137,45 +128,45 @@ function hitLT() {
 function hitLB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
-    step = -step + correction;
+    step = -51
+    
   } else {
     unpaintBall(ballPosition + 49);
-    step = -step;
-    correction = -correction;
+    step = -49;
   }
 }
+
+//step = 51; rigth bottom
 
 function hitRB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
-    step = -step + correction;
+    step = -49;
+
   } else {
     unpaintBall(ballPosition + 51);
-    step = -step;
-    correction = -correction;
+    step = -51;
   }
 }
 
 function hitWall() {
   if (ballPosition % 50 === 49) {
-    step -= correction;
-    correction = -2;
+    step = step > 0 ? 49 : -51
   } else if (ballPosition % 50 === 0) {
-    step -= correction;
-    correction = 2;
+    step = step > 0 ? 51 : -49
   }
 }
 
 function hitCeil() {
   if (ballPosition < 50) {
-    step = -step + correction;
+    step = step === -49 ? 51 : 49
   }
 }
 
 function hitFloor() {
   if (ballPosition > 3150 && step > 0) {
     if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
-      step = -step + correction;
+      step = step === 49 ? -51 : -49
     } else {
       paintBall(ballPosition + step);
       ballPosition+=step;
