@@ -16,6 +16,8 @@ let gameInProgress = false;
 let ballPosition;
 let interval;
 
+
+
 //рух мишки у квадратик
 function selectChosen(e) {
   const id = getCurrentPosition(e);
@@ -71,17 +73,19 @@ function startBallMovement() {
   interval = setInterval(() => defineNextPosition(), 50);
 }
 
+
+
 let step = -49;
 
 function defineNextPosition() {
   unpaintBall(ballPosition);
-  hitWall();
-  hitCeil();
   hitFloor();
+  hitCeil();
   hitFieldy(ballPosition);
+  hitWall();
   ballPosition += step;
   paintBall(ballPosition);
-}
+} 
 
 function hitFieldy(pos) {
   if (smallDivs[pos + step].classList.contains('chosen-div')) {
