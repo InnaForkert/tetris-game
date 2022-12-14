@@ -68,13 +68,95 @@ function unpaintBall(coord) {
 function startBallMovement(e) {
   gameInProgress = true;
   playground.removeEventListener('click', startBallMovement);
-  interval = setInterval(() => defineNextPosition(), 40);
+  interval = setInterval(() => defineNextPosition(), 50);
 }
 
 let step = -49;
 let correction = 2;
+
 function defineNextPosition() {
   unpaintBall(ballPosition);
+  hitWall();
+  hitCeil();
+  hitFloor();
+  hitFieldy(ballPosition);
+  ballPosition += step;
+  paintBall(ballPosition);
+}
+
+function hitFieldy(pos) {
+  if (smallDivs[pos + step].classList.contains('chosen-div')) {
+    switch (step) {
+      case -49:
+        hitRT();
+        break;
+      case 49:
+        hitLB();
+        break;
+      case 51:
+        hitRB();
+        break;
+      case -51:
+        hitLT();
+        break;
+    }
+    // unpaintBall(ballPosition);
+    // console.log('hit');
+    // ballPosition -= step;
+    // step = -step + correction;
+    // window.requestAnimationFrame(() => hitFieldy(ballPosition));
+  }
+}
+//step = -49;right top
+//step = 51; rigth bottom
+
+function hitRT() {
+  if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
+    unpaintBall(ballPosition - 50);
+    step = -step + correction;
+  } else {
+    unpaintBall(ballPosition - 49);
+    step = -step;
+    correction = -correction;
+  }
+}
+//step = -51; left top
+
+function hitLT() {
+  if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
+    unpaintBall(ballPosition - 50);
+    step = -step + correction;
+  } else {
+    unpaintBall(ballPosition - 51);
+    step = -step;
+    correction = -correction;
+  }
+}
+//step = 49; left bottom
+
+function hitLB() {
+  if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
+    unpaintBall(ballPosition + 50);
+    step = -step + correction;
+  } else {
+    unpaintBall(ballPosition + 49);
+    step = -step;
+    correction = -correction;
+  }
+}
+
+function hitRB() {
+  if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
+    unpaintBall(ballPosition + 50);
+    step = -step + correction;
+  } else {
+    unpaintBall(ballPosition + 51);
+    step = -step;
+    correction = -correction;
+  }
+}
+
+function hitWall() {
   if (ballPosition % 50 === 49) {
     step -= correction;
     correction = -2;
@@ -82,9 +164,15 @@ function defineNextPosition() {
     step -= correction;
     correction = 2;
   }
+}
+
+function hitCeil() {
   if (ballPosition < 50) {
     step = -step + correction;
   }
+}
+
+function hitFloor() {
   if (ballPosition > 3150 && step > 0) {
     if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
       step = -step + correction;
@@ -99,6 +187,4 @@ function defineNextPosition() {
       gameInProgress = false;
     }
   }
-  ballPosition += step;
-  paintBall(ballPosition);
 }
