@@ -1,0 +1,2 @@
+!function(){playground.addEventListener("mouseover",(function(a){var e=a.target.dataset.id%50;[t[e-3],t[e-2],t[e-1],t[e],t[e+1],t[e+2],t[e+3]].forEach((function(t){t&&t.classList.add("chosen-div")}))})),playground.addEventListener("mouseout",(function(a){var e=a.target.dataset.id%50;[t[e-3],t[e-2],t[e-1],t[e],t[e+1],t[e+2],t[e+3]].forEach((function(t){t&&t.classList.remove("chosen-div")}))}));var t=[];document.querySelectorAll(".small-div").forEach((function(a){a.dataset.id>3199&&t.push(a)}))}();
+//# sourceMappingURL=index.53515242.js.map
