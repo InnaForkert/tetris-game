@@ -12,9 +12,11 @@ smallDivs.forEach(div => {
     groundDivs.push(div);
   }
 });
+const speed = 50;
 let gameInProgress = false;
 let ballPosition;
 let interval;
+let rocket;
 
 
 
@@ -22,7 +24,7 @@ let interval;
 function selectChosen(e) {
   const id = getCurrentPosition(e);
   const coord = id % 50;
-  const rocket = buildRocket(coord);
+  buildRocket(coord);
   rocket.forEach(div => {
     if (div) div.classList.add('chosen-div');
   });
@@ -33,7 +35,7 @@ function selectChosen(e) {
 }
 
 function buildRocket(coord) {
-  const rocket = [
+  rocket = [
     groundDivs[coord - 3],
     groundDivs[coord - 2],
     groundDivs[coord - 1],
@@ -42,7 +44,6 @@ function buildRocket(coord) {
     groundDivs[coord + 2],
     groundDivs[coord + 3],
   ];
-  return rocket;
 }
 
 function getCurrentPosition(e) {
@@ -53,7 +54,7 @@ function getCurrentPosition(e) {
 function unselectChosen(e) {
   const id = getCurrentPosition(e);
   const coord = id % 50;
-  const rocket = buildRocket(coord);
+  buildRocket(coord);
   rocket.forEach(div => {
     if (div) div.classList.remove('chosen-div');
   });
@@ -70,7 +71,7 @@ function unpaintBall(coord) {
 function startBallMovement() {
   gameInProgress = true;
   playground.removeEventListener('click', startBallMovement);
-  interval = setInterval(() => defineNextPosition(), 50);
+  interval = setInterval(() => defineNextPosition(), speed);
 }
 
 
@@ -169,9 +170,14 @@ function hitCeil() {
 
 function hitFloor() {
   if (ballPosition > 3150 && step > 0) {
-    if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
-      step = step === 49 ? -51 : -49
+    if (smallDivs[ballPosition + step].classList.contains('chosen-div')) {
+      if (smallDivs[ballPosition+step].dataset.id === rocket[0].dataset.id) {
+      step = step === 51 ? -51 : -49
+    } else if (smallDivs[ballPosition+step].dataset.id === rocket[6].dataset.id) {
+      step = step === 49 ? -49 : -51
     } else {
+      step = step === 49 ? -51 : -49
+    } } else {
       paintBall(ballPosition + step);
       ballPosition+=step;
       setTimeout(() => {
