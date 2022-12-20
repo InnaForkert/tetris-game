@@ -12,13 +12,15 @@ const playground = document.querySelector('#playground');
   const smallDivs = document.querySelectorAll('.small-div');
   generateFieldies(smallDivs);
 
-})();
+})()
+
 
 function generateFieldies(list) {
   list.forEach((div, idx) => {
     let rand = Math.random();
-    if (idx < 1700 && idx > 300) {
+    if (rand>0.5 && idx < 2000 && idx > 1500) {
       div.classList.add('chosen-div');
     }
   });
 }
+
