@@ -5,7 +5,7 @@ const userData = {};
 inviteForm.addEventListener('input', handleInput);
 inviteForm.addEventListener('submit', onSubmitForm);
 
-function initPage() {
+(function initPage() {
   let memory = localStorage.getItem(LOCALE_STORAGE_KEY);
 
   if (memory) {
@@ -14,9 +14,7 @@ function initPage() {
       inviteForm.elements[name].value = value;
     });
   }
-}
-
-initPage();
+})();
 
 function handleInput(event) {
   let savedData = localStorage.getItem(LOCALE_STORAGE_KEY);
@@ -32,7 +30,6 @@ function onSubmitForm(e) {
   formData.forEach((value, name) => {
     userData[name] = value;
   });
-  console.log(userData);
 
   e.target.reset();
   localStorage.removeItem(LOCALE_STORAGE_KEY);
