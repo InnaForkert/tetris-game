@@ -1,3 +1,4 @@
+import { speedForm } from './form';
 //додаємо слухач подій на поле на рух курсора в та з поля
 playground.addEventListener('mouseover', selectChosen);
 playground.addEventListener('mouseout', unselectChosen);
@@ -12,13 +13,13 @@ smallDivs.forEach(div => {
     groundDivs.push(div);
   }
 });
-const speed = 50;
+
+let speed;
 let gameInProgress = false;
 let ballPosition;
 let interval;
 let rocket;
-
-
+let score = 0;
 
 //рух мишки у квадратик
 function selectChosen(e) {
@@ -70,11 +71,10 @@ function unpaintBall(coord) {
 
 function startBallMovement() {
   gameInProgress = true;
+  speed = Number(speedForm);
   playground.removeEventListener('click', startBallMovement);
   interval = setInterval(() => defineNextPosition(), speed);
 }
-
-
 
 let step = -49;
 
@@ -86,10 +86,12 @@ function defineNextPosition() {
   hitWall();
   ballPosition += step;
   paintBall(ballPosition);
-} 
+}
 
 function hitFieldy(pos) {
   if (smallDivs[pos + step].classList.contains('chosen-div')) {
+    score += 2;
+    playerScore.textContent = `${Math.floor(score * calculatePropfit(speed))}`;
     switch (step) {
       case -49:
         hitRT();
@@ -111,7 +113,7 @@ function hitFieldy(pos) {
 function hitRT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    step = 51
+    step = 51;
   } else {
     unpaintBall(ballPosition - 49);
     step = -49;
@@ -122,7 +124,7 @@ function hitRT() {
 function hitLT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    step = 49
+    step = 49;
   } else {
     unpaintBall(ballPosition - 51);
     step = 51;
@@ -133,8 +135,7 @@ function hitLT() {
 function hitLB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
-    step = -51
-    
+    step = -51;
   } else {
     unpaintBall(ballPosition + 49);
     step = -49;
@@ -147,7 +148,6 @@ function hitRB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
     step = -49;
-
   } else {
     unpaintBall(ballPosition + 51);
     step = -51;
@@ -156,30 +156,33 @@ function hitRB() {
 
 function hitWall() {
   if (ballPosition % 50 === 49) {
-    step = step > 0 ? 49 : -51
+    step = step > 0 ? 49 : -51;
   } else if (ballPosition % 50 === 0) {
-    step = step > 0 ? 51 : -49
+    step = step > 0 ? 51 : -49;
   }
 }
 
 function hitCeil() {
   if (ballPosition < 50) {
-    step = step === -49 ? 51 : 49
+    step = step === -49 ? 51 : 49;
   }
 }
 
 function hitFloor() {
   if (ballPosition > 3150 && step > 0) {
     if (smallDivs[ballPosition + step].classList.contains('chosen-div')) {
-      if (smallDivs[ballPosition+step].dataset.id === rocket[0].dataset.id) {
-      step = step === 51 ? -51 : -49
-    } else if (smallDivs[ballPosition+step].dataset.id === rocket[6].dataset.id) {
-      step = step === 49 ? -49 : -51
+      if (smallDivs[ballPosition + step].dataset.id === rocket[0].dataset.id) {
+        step = step === 51 ? -51 : -49;
+      } else if (
+        smallDivs[ballPosition + step].dataset.id === rocket[6].dataset.id
+      ) {
+        step = step === 49 ? -49 : -51;
+      } else {
+        step = step === 49 ? -51 : -49;
+      }
     } else {
-      step = step === 49 ? -51 : -49
-    } } else {
       paintBall(ballPosition + step);
-      ballPosition+=step;
+      ballPosition += step;
       setTimeout(() => {
         unpaintBall(ballPosition);
         alert('You lose!');
@@ -187,6 +190,29 @@ function hitFloor() {
       clearInterval(interval);
       playground.addEventListener('click', startBallMovement);
       gameInProgress = false;
+      playerScore.innerHTML = '0';
     }
   }
 }
+
+function calculatePropfit(speed) {
+  switch (speed) {
+    case 30:
+      return 3;
+      break;
+    case 40:
+      return 2;
+      break;
+    case 50:
+      return 1.5;
+      break;
+    case 60:
+      return 0.5;
+      break;
+    default:
+      return 1;
+  }
+}
+
+const playerScore = document.querySelector('.score');
+playerScore.textContent = score;
