@@ -9,7 +9,7 @@ export let speedForm;
 inviteForm.addEventListener('input', handleInput);
 inviteForm.addEventListener('submit', onSubmitForm);
 
-function initPage() {
+(function initPage() {
   let memory = localStorage.getItem(LOCALE_STORAGE_KEY);
 
   if (memory) {
@@ -18,9 +18,7 @@ function initPage() {
       inviteForm.elements[name].value = value;
     });
   }
-}
-
-initPage();
+})();
 
 function handleInput(event) {
   let savedData = localStorage.getItem(LOCALE_STORAGE_KEY);
