@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="./sass/index.scss" />
-    <script type="module" src="./scripts/playground.js"></script>
     <script type="module" src="./scripts/form.js"></script>
+    <script type="module" src="./scripts/playground.js"></script>
     <script type="module" src="./scripts/rocket.js"></script>
   </head>
   <body>
@@ -24,6 +24,23 @@
       <label>
         <input type="radio" name="bot" value="false" />
         No
+      </label>
+      <p>Choose your speed:</p>
+      <label>
+        <input type="radio" name="speed" value="60" />
+        Slow
+      </label>
+      <label>
+        <input type="radio" name="speed" value="50" />
+        Normal
+      </label>
+      <label>
+        <input type="radio" name="speed" value="40" />
+        Fast
+      </label>
+      <label>
+        <input type="radio" name="speed" value="30" />
+        Super fast
       </label>
       <button type="submit">Submit</button>
     </form>
