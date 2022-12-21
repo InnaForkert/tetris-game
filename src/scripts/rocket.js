@@ -12,13 +12,12 @@ smallDivs.forEach(div => {
     groundDivs.push(div);
   }
 });
-const speed = 50;
+const speed = 100;
 let gameInProgress = false;
 let ballPosition;
 let interval;
 let rocket;
-
-
+let score = 0;
 
 //рух мишки у квадратик
 function selectChosen(e) {
@@ -74,8 +73,6 @@ function startBallMovement() {
   interval = setInterval(() => defineNextPosition(), speed);
 }
 
-
-
 let step = -49;
 
 function defineNextPosition() {
@@ -86,10 +83,12 @@ function defineNextPosition() {
   hitWall();
   ballPosition += step;
   paintBall(ballPosition);
-} 
+}
 
 function hitFieldy(pos) {
   if (smallDivs[pos + step].classList.contains('chosen-div')) {
+    score += 1;
+    playerScore.textContent = `${Math.ceil(score * calculatePropfit(speed))}`;
     switch (step) {
       case -49:
         hitRT();
@@ -111,7 +110,7 @@ function hitFieldy(pos) {
 function hitRT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    step = 51
+    step = 51;
   } else {
     unpaintBall(ballPosition - 49);
     step = -49;
@@ -122,7 +121,7 @@ function hitRT() {
 function hitLT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    step = 49
+    step = 49;
   } else {
     unpaintBall(ballPosition - 51);
     step = 51;
@@ -133,8 +132,7 @@ function hitLT() {
 function hitLB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
-    step = -51
-    
+    step = -51;
   } else {
     unpaintBall(ballPosition + 49);
     step = -49;
@@ -147,7 +145,6 @@ function hitRB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
     step = -49;
-
   } else {
     unpaintBall(ballPosition + 51);
     step = -51;
@@ -156,30 +153,33 @@ function hitRB() {
 
 function hitWall() {
   if (ballPosition % 50 === 49) {
-    step = step > 0 ? 49 : -51
+    step = step > 0 ? 49 : -51;
   } else if (ballPosition % 50 === 0) {
-    step = step > 0 ? 51 : -49
+    step = step > 0 ? 51 : -49;
   }
 }
 
 function hitCeil() {
   if (ballPosition < 50) {
-    step = step === -49 ? 51 : 49
+    step = step === -49 ? 51 : 49;
   }
 }
 
 function hitFloor() {
   if (ballPosition > 3150 && step > 0) {
     if (smallDivs[ballPosition + step].classList.contains('chosen-div')) {
-      if (smallDivs[ballPosition+step].dataset.id === rocket[0].dataset.id) {
-      step = step === 51 ? -51 : -49
-    } else if (smallDivs[ballPosition+step].dataset.id === rocket[6].dataset.id) {
-      step = step === 49 ? -49 : -51
+      if (smallDivs[ballPosition + step].dataset.id === rocket[0].dataset.id) {
+        step = step === 51 ? -51 : -49;
+      } else if (
+        smallDivs[ballPosition + step].dataset.id === rocket[6].dataset.id
+      ) {
+        step = step === 49 ? -49 : -51;
+      } else {
+        step = step === 49 ? -51 : -49;
+      }
     } else {
-      step = step === 49 ? -51 : -49
-    } } else {
       paintBall(ballPosition + step);
-      ballPosition+=step;
+      ballPosition += step;
       setTimeout(() => {
         unpaintBall(ballPosition);
         alert('You lose!');
@@ -187,6 +187,32 @@ function hitFloor() {
       clearInterval(interval);
       playground.addEventListener('click', startBallMovement);
       gameInProgress = false;
+      playerScore.innerHTML = '0';
     }
   }
 }
+
+function calculatePropfit(speed) {
+  switch (speed) {
+    case 40:
+      return 1.5;
+      break;
+    case 60:
+      return 1.2;
+      break;
+    case 80:
+      return 1.1;
+      break;
+    case 100:
+      return 0.8;
+      break;
+    default:
+      return 1;
+  }
+}
+
+const playerScore = document.querySelector('.score');
+const playerSpeed = document.querySelector('.speed');
+const playerGreet = document.querySelector('.player-gretting');
+playerSpeed.textContent = speed;
+playerScore.textContent = score;

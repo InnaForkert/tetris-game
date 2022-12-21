@@ -1,5 +1,6 @@
 const inviteForm = document.querySelector('.form-js');
 const playgroundDiv = document.querySelector('#playground');
+const playerDiv = document.querySelector('.player');
 const LOCALE_STORAGE_KEY = 'user-config';
 const userData = {};
 inviteForm.addEventListener('input', handleInput);
@@ -37,5 +38,6 @@ function onSubmitForm(e) {
   e.target.reset();
   localStorage.removeItem(LOCALE_STORAGE_KEY);
   inviteForm.classList.add('is-hidden');
+  playerDiv.classList.remove('is-hidden');
   playgroundDiv.classList.remove('is-hidden');
 }
