@@ -1,3 +1,4 @@
+import { speedForm } from './form';
 //додаємо слухач подій на поле на рух курсора в та з поля
 playground.addEventListener('mouseover', selectChosen);
 playground.addEventListener('mouseout', unselectChosen);
@@ -12,11 +13,13 @@ smallDivs.forEach(div => {
     groundDivs.push(div);
   }
 });
-const speed = 100;
+
+let speed;
 let gameInProgress = false;
 let ballPosition;
 let interval;
 let rocket;
+let score = 0;
 
 //рух мишки у квадратик
 function selectChosen(e) {
@@ -67,6 +70,7 @@ function unpaintBall(coord) {
 
 function startBallMovement() {
   gameInProgress = true;
+  speed = Number(speedForm);
   playground.removeEventListener('click', startBallMovement);
   interval = setInterval(() => defineNextPosition(), speed);
 }
@@ -90,6 +94,8 @@ function hitFieldy(pos) {
       step < 0) ||
     (smallDivs[ballPosition + 50].classList.contains('chosen-div') && step > 0)
   ) {
+    score += 2;
+    playerScore.textContent = `${Math.floor(score * calculatePropfit(speed))}`;
     switch (step) {
       case -49:
         hitRT();
@@ -188,6 +194,29 @@ function hitFloor() {
       clearInterval(interval);
       playground.addEventListener('click', startBallMovement);
       gameInProgress = false;
+      playerScore.innerHTML = '0';
     }
   }
 }
+
+function calculatePropfit(speed) {
+  switch (speed) {
+    case 30:
+      return 3;
+      break;
+    case 40:
+      return 2;
+      break;
+    case 50:
+      return 1.5;
+      break;
+    case 60:
+      return 0.5;
+      break;
+    default:
+      return 1;
+  }
+}
+
+const playerScore = document.querySelector('.score');
+playerScore.textContent = score;

@@ -1,7 +1,11 @@
 const inviteForm = document.querySelector('.form-js');
 const playgroundDiv = document.querySelector('#playground');
+const playerDiv = document.querySelector('.player');
+const playerGreet = document.querySelector('.player-gretting');
+const playerSpeed = document.querySelector('.speed');
 const LOCALE_STORAGE_KEY = 'user-config';
-const userData = {};
+let userData = {};
+export let speedForm;
 inviteForm.addEventListener('input', handleInput);
 inviteForm.addEventListener('submit', onSubmitForm);
 
@@ -34,5 +38,28 @@ function onSubmitForm(e) {
   e.target.reset();
   localStorage.removeItem(LOCALE_STORAGE_KEY);
   inviteForm.classList.add('is-hidden');
+  playerDiv.classList.remove('is-hidden');
   playgroundDiv.classList.remove('is-hidden');
+  playerGreet.innerHTML = `Hello, ${userData.name}! Have fun.`;
+  playerSpeed.innerHTML = speedToText(Number(userData.speed));
+  speedForm = userData.speed;
+}
+
+function speedToText(speed) {
+  switch (speed) {
+    case 30:
+      return 'Super fast';
+      break;
+    case 40:
+      return 'Fast';
+      break;
+    case 50:
+      return 'Normal';
+      break;
+    case 60:
+      return 'Slow';
+      break;
+    default:
+      return 1;
+  }
 }
