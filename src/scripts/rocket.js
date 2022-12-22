@@ -30,8 +30,8 @@ function selectChosen(e) {
     if (div) div.classList.add('chosen-div');
   });
   if (!gameInProgress) {
-    paintBall(3150 + coord);
     ballPosition = 3150 + coord;
+    paintBall(ballPosition);
   }
 }
 
@@ -55,7 +55,6 @@ function getCurrentPosition(e) {
 function unselectChosen(e) {
   const id = getCurrentPosition(e);
   const coord = id % 50;
-  buildRocket(coord);
   rocket.forEach(div => {
     if (div) div.classList.remove('chosen-div');
   });
@@ -89,7 +88,12 @@ function defineNextPosition() {
 }
 
 function hitFieldy(pos) {
-  if (smallDivs[pos + step].classList.contains('chosen-div')) {
+  if (
+    smallDivs[pos + step].classList.contains('chosen-div') ||
+    (smallDivs[ballPosition - 50].classList.contains('chosen-div') &&
+      step < 0) ||
+    (smallDivs[ballPosition + 50].classList.contains('chosen-div') && step > 0)
+  ) {
     score += 2;
     playerScore.textContent = `${Math.floor(score * calculatePropfit(speed))}`;
     switch (step) {
@@ -116,7 +120,7 @@ function hitRT() {
     step = 51;
   } else {
     unpaintBall(ballPosition - 49);
-    step = -49;
+    step = 49;
   }
 }
 //step = -51; left top
@@ -181,8 +185,8 @@ function hitFloor() {
         step = step === 49 ? -51 : -49;
       }
     } else {
-      paintBall(ballPosition + step);
       ballPosition += step;
+      paintBall(ballPosition);
       setTimeout(() => {
         unpaintBall(ballPosition);
         alert('You lose!');
