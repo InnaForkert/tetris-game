@@ -82,10 +82,18 @@ let currentStep = rightTop;
 
 function defineNextPosition() {
   unpaintBall(ballPosition);
-  hitFloor();
-  hitCeil();
-  hitFieldy(ballPosition);
-  hitWall();
+  hitFloor()
+    ? makeAStep()
+    : hitCeil()
+    ? makeAStep()
+    : hitFieldy(ballPosition)
+    ? makeAStep()
+    : hitWall()
+    ? makeAStep()
+    : makeAStep();
+}
+
+function makeAStep() {
   ballPosition += currentStep;
   paintBall(ballPosition);
 }
