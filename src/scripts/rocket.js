@@ -122,33 +122,30 @@ function hitFieldy(pos) {
 function hitRT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    currentStep = rightBottom;
-  } else {
-    unpaintBall(ballPosition + currentStep);
-    currentStep = leftBottom;
+    return setStep(rightBottom);
   }
+  unpaintBall(ballPosition + currentStep);
+  return setStep(leftBottom);
 }
 //currentStep = -51; left top
 
 function hitLT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    currentStep = leftBottom;
-  } else {
-    unpaintBall(ballPosition + currentStep);
-    currentStep = rightBottom;
+    return setStep(leftBottom);
   }
+  unpaintBall(ballPosition + currentStep);
+  return setStep(rightBottom);
 }
 //currentStep = 49; left bottom
 
 function hitLB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
-    currentStep = leftTop;
-  } else {
-    unpaintBall(ballPosition + currentStep);
-    currentStep = rightTop;
+    return setStep(leftTop);
   }
+  unpaintBall(ballPosition + currentStep);
+  return setStep(rightTop);
 }
 
 //currentStep = 51; rigth bottom
@@ -156,11 +153,10 @@ function hitLB() {
 function hitRB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
-    currentStep = rightTop;
-  } else {
-    unpaintBall(ballPosition + currentStep);
-    currentStep = leftTop;
+    return setStep(rightTop);
   }
+  unpaintBall(ballPosition + currentStep);
+  return setStep(leftTop);
 }
 
 function hitWall() {
@@ -173,7 +169,10 @@ function hitWall() {
 
 function hitCeil() {
   if (ballPosition < 50) {
-    currentStep = currentStep === rightTop ? rightBottom : leftBottom;
+    if (currentStep === rightTop) {
+      return setStep(rightBottom);
+    }
+    return setStep(leftBottom);
   }
 }
 
@@ -186,18 +185,23 @@ function hitFloor() {
         smallDivs[ballPosition + currentStep].dataset.id ===
         rocket[0].dataset.id
       ) {
-        currentStep = leftTop;
-      } else if (
+        return setStep(leftTop);
+      }
+
+      if (
         smallDivs[ballPosition + currentStep].dataset.id ===
         rocket[6].dataset.id
       ) {
-        currentStep = rightTop;
-      } else {
-        currentStep = currentStep === leftBottom ? leftTop : rightTop;
+        return setStep(rightTop);
       }
-    } else {
-      gameOver();
+
+      if (currentStep === leftBottom) {
+        return setStep(leftTop);
+      }
+
+      return setStep(rightTop);
     }
+    gameOver();
   }
 }
 
@@ -231,6 +235,11 @@ function calculatePropfit(speed) {
     default:
       return 1;
   }
+}
+
+function setStep(step) {
+  currentStep = step;
+  return true;
 }
 
 const playerScore = document.querySelector('.score');
