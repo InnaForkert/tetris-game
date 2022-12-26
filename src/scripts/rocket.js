@@ -163,9 +163,9 @@ function hitRB() {
 }
 
 function hitWall() {
-  if (ballPosition % 50 === 49) {
+  if (ballPosition % 50 === 49 && ballPosition + currentStep !== 3249) {
     currentStep = currentStep > 0 ? leftBottom : leftTop;
-  } else if (ballPosition % 50 === 0) {
+  } else if (ballPosition % 50 === 0 && ballPosition + currentStep !== 3200) {
     currentStep = currentStep > 0 ? rightBottom : rightTop;
   }
 }
