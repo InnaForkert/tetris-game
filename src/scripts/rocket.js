@@ -1,5 +1,5 @@
 import { speedForm } from './form';
-import { currentStep } from './util/step';
+import { step } from './util/step';
 //додаємо слухач подій на поле на рух курсора в та з поля
 playground.addEventListener('mouseover', selectChosen);
 playground.addEventListener('mouseout', unselectChosen);
@@ -195,18 +195,22 @@ function hitFloor() {
         currentStep = currentStep === rightTop ? leftTop : rightTop;
       }
     } else {
-      ballPosition += currentStep;
-      paintBall(ballPosition);
-      setTimeout(() => {
-        unpaintBall(ballPosition);
-        alert('You lose!');
-      }, 50);
-      clearInterval(interval);
-      playground.addEventListener('click', startBallMovement);
-      gameInProgress = false;
-      playerScore.innerHTML = '0';
+      gameOver();
     }
   }
+}
+
+function gameOver() {
+  ballPosition += currentStep;
+  paintBall(ballPosition);
+  setTimeout(() => {
+    unpaintBall(ballPosition);
+    alert('You lose!');
+  }, 50);
+  clearInterval(interval);
+  playground.addEventListener('click', startBallMovement);
+  gameInProgress = false;
+  playerScore.innerHTML = '0';
 }
 
 function calculatePropfit(speed) {
