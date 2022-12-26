@@ -48,6 +48,8 @@ function buildRocket(coord) {
     groundDivs[coord + 2],
     groundDivs[coord + 3],
   ];
+  //ракетка на всю підлогу)
+  // rocket = [...groundDivs];
 }
 
 function getCurrentPosition(e) {
@@ -86,21 +88,34 @@ function defineNextPosition() {
     ? makeAStep()
     : hitCeil()
     ? makeAStep()
-    : hitFieldy(ballPosition)
-    ? makeAStep()
     : hitWall()
+    ? makeAStep()
+    : hitFieldyGeneral()
     ? makeAStep()
     : makeAStep();
 }
 
+function nextIsPainted() {
+  return smallDivs[ballPosition + currentStep].classList.contains('chosen-div');
+}
+
 function makeAStep() {
+  if (nextIsPainted()) {
+    hitFieldyGeneral();
+  }
   ballPosition += currentStep;
   paintBall(ballPosition);
 }
 
-function hitFieldy(pos) {
+function hitFieldyGeneral() {
+  const first = hitFieldy();
+  const next = hitSideFieldy();
+  return first || next;
+}
+
+function hitFieldy() {
   if (
-    smallDivs[pos + currentStep].classList.contains('chosen-div') ||
+    smallDivs[ballPosition + currentStep].classList.contains('chosen-div') ||
     (smallDivs[ballPosition - 50].classList.contains('chosen-div') &&
       currentStep < 0) ||
     (smallDivs[ballPosition + 50].classList.contains('chosen-div') &&
@@ -122,9 +137,42 @@ function hitFieldy(pos) {
         hitLT();
         break;
     }
-    hitFieldy(ballPosition);
   }
 }
+
+function hitSideFieldy() {
+  if (
+    smallDivs[ballPosition - 1].classList.contains('chosen-div') &&
+    (currentStep === leftTop || currentStep === leftBottom)
+  ) {
+    unpaintBall(ballPosition - 1);
+    return hitSideFieldyLeft();
+  }
+  if (
+    smallDivs[ballPosition + 1].classList.contains('chosen-div') &&
+    (currentStep === rightTop || currentStep === rightBottom)
+  ) {
+    unpaintBall(ballPosition + 1);
+    return hitSideFieldyRight();
+  }
+}
+
+function hitSideFieldyLeft() {
+  unpaintBall(ballPosition + currentStep - 1);
+  if (currentStep === leftBottom) {
+    return setStep(rightBottom);
+  }
+  return setStep(rightTop);
+}
+
+function hitSideFieldyRight() {
+  unpaintBall(ballPosition + currentStep + 1);
+  if (currentStep === rightBottom) {
+    return setStep(leftBottom);
+  }
+  return setStep(leftTop);
+}
+
 //currentStep = -49;right top
 
 function hitRT() {
@@ -169,9 +217,16 @@ function hitRB() {
 
 function hitWall() {
   if (ballPosition % 50 === 49 && ballPosition + currentStep !== 3249) {
-    currentStep = currentStep > 0 ? leftBottom : leftTop;
-  } else if (ballPosition % 50 === 0 && ballPosition + currentStep !== 3200) {
-    currentStep = currentStep > 0 ? rightBottom : rightTop;
+    if (currentStep > 0) {
+      return setStep(leftBottom);
+    }
+    return setStep(leftTop);
+  }
+  if (ballPosition % 50 === 0 && ballPosition + currentStep !== 3200) {
+    if (currentStep > 0) {
+      return setStep(rightBottom);
+    }
+    return setStep(rightTop);
   }
 }
 
