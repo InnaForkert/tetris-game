@@ -185,14 +185,14 @@ function hitFloor() {
         smallDivs[ballPosition + currentStep].dataset.id ===
         rocket[0].dataset.id
       ) {
-        currentStep = currentStep === rightBottom ? leftTop : rightTop;
+        currentStep = leftTop;
       } else if (
         smallDivs[ballPosition + currentStep].dataset.id ===
         rocket[6].dataset.id
       ) {
-        currentStep = currentStep === leftBottom ? rightTop : leftTop;
+        currentStep = rightTop;
       } else {
-        currentStep = currentStep === rightTop ? leftTop : rightTop;
+        currentStep = currentStep === leftBottom ? leftTop : rightTop;
       }
     } else {
       gameOver();
