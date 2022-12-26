@@ -114,6 +114,7 @@ function hitFieldy(pos) {
         hitLT();
         break;
     }
+    hitFieldy(ballPosition);
   }
 }
 //currentStep = -49;right top
