@@ -1,4 +1,5 @@
 import { speedForm } from './form';
+import { step } from './util/step';
 //додаємо слухач подій на поле на рух курсора в та з поля
 playground.addEventListener('mouseover', selectChosen);
 playground.addEventListener('mouseout', unselectChosen);
@@ -13,6 +14,8 @@ smallDivs.forEach(div => {
     groundDivs.push(div);
   }
 });
+
+const { rightTop, leftTop, leftBottom, rightBottom } = step;
 
 let speed;
 let gameInProgress = false;
@@ -45,6 +48,8 @@ function buildRocket(coord) {
     groundDivs[coord + 2],
     groundDivs[coord + 3],
   ];
+  //ракетка на всю підлогу)
+  // rocket = [...groundDivs];
 }
 
 function getCurrentPosition(e) {
@@ -75,128 +80,205 @@ function startBallMovement() {
   interval = setInterval(() => defineNextPosition(), speed);
 }
 
-let step = -49;
+let currentStep = rightTop;
 
 function defineNextPosition() {
   unpaintBall(ballPosition);
-  hitFloor();
-  hitCeil();
-  hitFieldy(ballPosition);
-  hitWall();
-  ballPosition += step;
+  hitFloor()
+    ? makeAStep()
+    : hitCeil()
+    ? makeAStep()
+    : hitWall()
+    ? makeAStep()
+    : hitFieldyGeneral()
+    ? makeAStep()
+    : makeAStep();
+}
+
+function nextIsPainted() {
+  return smallDivs[ballPosition + currentStep].classList.contains('chosen-div');
+}
+
+function makeAStep() {
+  if (nextIsPainted()) {
+    hitFieldyGeneral();
+  }
+  ballPosition += currentStep;
   paintBall(ballPosition);
 }
 
-function hitFieldy(pos) {
+function hitFieldyGeneral() {
+  const first = hitFieldy();
+  const next = hitSideFieldy();
+  return first || next;
+}
+
+function hitFieldy() {
   if (
-    smallDivs[pos + step].classList.contains('chosen-div') ||
+    smallDivs[ballPosition + currentStep].classList.contains('chosen-div') ||
     (smallDivs[ballPosition - 50].classList.contains('chosen-div') &&
-      step < 0) ||
-    (smallDivs[ballPosition + 50].classList.contains('chosen-div') && step > 0)
+      currentStep < 0) ||
+    (smallDivs[ballPosition + 50].classList.contains('chosen-div') &&
+      currentStep > 0)
   ) {
     score += 2;
     playerScore.textContent = `${Math.floor(score * calculatePropfit(speed))}`;
-    switch (step) {
-      case -49:
+    switch (currentStep) {
+      case rightTop:
         hitRT();
         break;
-      case 49:
+      case leftBottom:
         hitLB();
         break;
-      case 51:
+      case rightBottom:
         hitRB();
         break;
-      case -51:
+      case leftTop:
         hitLT();
         break;
     }
   }
 }
-//step = -49;right top
+
+function hitSideFieldy() {
+  if (
+    smallDivs[ballPosition - 1].classList.contains('chosen-div') &&
+    (currentStep === leftTop || currentStep === leftBottom)
+  ) {
+    unpaintBall(ballPosition - 1);
+    return hitSideFieldyLeft();
+  }
+  if (
+    smallDivs[ballPosition + 1].classList.contains('chosen-div') &&
+    (currentStep === rightTop || currentStep === rightBottom)
+  ) {
+    unpaintBall(ballPosition + 1);
+    return hitSideFieldyRight();
+  }
+}
+
+function hitSideFieldyLeft() {
+  unpaintBall(ballPosition + currentStep - 1);
+  if (currentStep === leftBottom) {
+    return setStep(rightBottom);
+  }
+  return setStep(rightTop);
+}
+
+function hitSideFieldyRight() {
+  unpaintBall(ballPosition + currentStep + 1);
+  if (currentStep === rightBottom) {
+    return setStep(leftBottom);
+  }
+  return setStep(leftTop);
+}
+
+//currentStep = -49;right top
 
 function hitRT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    step = 51;
-  } else {
-    unpaintBall(ballPosition - 49);
-    step = 49;
+    return setStep(rightBottom);
   }
+  unpaintBall(ballPosition + currentStep);
+  return setStep(leftBottom);
 }
-//step = -51; left top
+//currentStep = -51; left top
 
 function hitLT() {
   if (smallDivs[ballPosition - 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition - 50);
-    step = 49;
-  } else {
-    unpaintBall(ballPosition - 51);
-    step = 51;
+    return setStep(leftBottom);
   }
+  unpaintBall(ballPosition + currentStep);
+  return setStep(rightBottom);
 }
-//step = 49; left bottom
+//currentStep = 49; left bottom
 
 function hitLB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
-    step = -51;
-  } else {
-    unpaintBall(ballPosition + 49);
-    step = -49;
+    return setStep(leftTop);
   }
+  unpaintBall(ballPosition + currentStep);
+  return setStep(rightTop);
 }
 
-//step = 51; rigth bottom
+//currentStep = 51; rigth bottom
 
 function hitRB() {
   if (smallDivs[ballPosition + 50].classList.contains('chosen-div')) {
     unpaintBall(ballPosition + 50);
-    step = -49;
-  } else {
-    unpaintBall(ballPosition + 51);
-    step = -51;
+    return setStep(rightTop);
   }
+  unpaintBall(ballPosition + currentStep);
+  return setStep(leftTop);
 }
 
 function hitWall() {
-  if (ballPosition % 50 === 49) {
-    step = step > 0 ? 49 : -51;
-  } else if (ballPosition % 50 === 0) {
-    step = step > 0 ? 51 : -49;
+  if (ballPosition % 50 === 49 && ballPosition + currentStep !== 3249) {
+    if (currentStep > 0) {
+      return setStep(leftBottom);
+    }
+    return setStep(leftTop);
+  }
+  if (ballPosition % 50 === 0 && ballPosition + currentStep !== 3200) {
+    if (currentStep > 0) {
+      return setStep(rightBottom);
+    }
+    return setStep(rightTop);
   }
 }
 
 function hitCeil() {
   if (ballPosition < 50) {
-    step = step === -49 ? 51 : 49;
+    if (currentStep === rightTop) {
+      return setStep(rightBottom);
+    }
+    return setStep(leftBottom);
   }
 }
 
 function hitFloor() {
-  if (ballPosition > 3150 && step > 0) {
-    if (smallDivs[ballPosition + step].classList.contains('chosen-div')) {
-      if (smallDivs[ballPosition + step].dataset.id === rocket[0].dataset.id) {
-        step = step === 51 ? -51 : -49;
-      } else if (
-        smallDivs[ballPosition + step].dataset.id === rocket[6].dataset.id
+  if (ballPosition > 3150 && currentStep > 0) {
+    if (
+      smallDivs[ballPosition + currentStep].classList.contains('chosen-div')
+    ) {
+      if (
+        smallDivs[ballPosition + currentStep].dataset.id ===
+        rocket[0].dataset.id
       ) {
-        step = step === 49 ? -49 : -51;
-      } else {
-        step = step === 49 ? -51 : -49;
+        return setStep(leftTop);
       }
-    } else {
-      ballPosition += step;
-      paintBall(ballPosition);
-      setTimeout(() => {
-        unpaintBall(ballPosition);
-        alert('You lose!');
-      }, 50);
-      clearInterval(interval);
-      playground.addEventListener('click', startBallMovement);
-      gameInProgress = false;
-      playerScore.innerHTML = '0';
+
+      if (
+        smallDivs[ballPosition + currentStep].dataset.id ===
+        rocket[6].dataset.id
+      ) {
+        return setStep(rightTop);
+      }
+
+      if (currentStep === leftBottom) {
+        return setStep(leftTop);
+      }
+
+      return setStep(rightTop);
     }
+    gameOver();
   }
+}
+
+function gameOver() {
+  ballPosition += currentStep;
+  paintBall(ballPosition);
+  setTimeout(() => {
+    unpaintBall(ballPosition);
+    alert('You lose!');
+  }, 50);
+  clearInterval(interval);
+  playground.addEventListener('click', startBallMovement);
+  gameInProgress = false;
+  playerScore.innerHTML = '0';
 }
 
 function calculatePropfit(speed) {
@@ -216,6 +298,11 @@ function calculatePropfit(speed) {
     default:
       return 1;
   }
+}
+
+function setStep(step) {
+  currentStep = step;
+  return true;
 }
 
 const playerScore = document.querySelector('.score');
