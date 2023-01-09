@@ -1,5 +1,6 @@
 import { speedForm } from './form';
 import { step } from './util/step';
+import { sounds } from './sounds';
 //додаємо слухач подій на поле на рух курсора в та з поля
 playground.addEventListener('mouseover', selectChosen);
 playground.addEventListener('mouseout', unselectChosen);
@@ -78,6 +79,7 @@ function startBallMovement() {
   speed = Number(speedForm);
   playground.removeEventListener('click', startBallMovement);
   interval = setInterval(() => defineNextPosition(), speed);
+  sounds.start.play();
 }
 
 let currentStep = rightTop;
@@ -137,6 +139,7 @@ function hitFieldy() {
         hitLT();
         break;
     }
+    sounds.hitBlock.play();
   }
 }
 
@@ -146,6 +149,7 @@ function hitSideFieldy() {
     (currentStep === leftTop || currentStep === leftBottom)
   ) {
     unpaintBall(ballPosition - 1);
+    sounds.hitBlock.play();
     return hitSideFieldyLeft();
   }
   if (
@@ -153,6 +157,7 @@ function hitSideFieldy() {
     (currentStep === rightTop || currentStep === rightBottom)
   ) {
     unpaintBall(ballPosition + 1);
+    sounds.hitBlock.play();
     return hitSideFieldyRight();
   }
 }
@@ -220,12 +225,14 @@ function hitWall() {
     if (currentStep > 0) {
       return setStep(leftBottom);
     }
+    sounds.hitWall.play();
     return setStep(leftTop);
   }
   if (ballPosition % 50 === 0 && ballPosition + currentStep !== 3200) {
     if (currentStep > 0) {
       return setStep(rightBottom);
     }
+    sounds.hitWall.play();
     return setStep(rightTop);
   }
 }
@@ -236,6 +243,7 @@ function hitCeil() {
       return setStep(rightBottom);
     }
     return setStep(leftBottom);
+    sounds.hitWall.play();
   }
 }
 
@@ -248,6 +256,7 @@ function hitFloor() {
         smallDivs[ballPosition + currentStep].dataset.id ===
         rocket[0].dataset.id
       ) {
+        sounds.hitRocket.play();
         return setStep(leftTop);
       }
 
@@ -255,13 +264,15 @@ function hitFloor() {
         smallDivs[ballPosition + currentStep].dataset.id ===
         rocket[6].dataset.id
       ) {
+        sounds.hitRocket.play();
         return setStep(rightTop);
       }
 
       if (currentStep === leftBottom) {
+        sounds.hitRocket.play();
         return setStep(leftTop);
       }
-
+      sounds.hitRocket.play();
       return setStep(rightTop);
     }
     gameOver();
@@ -279,6 +290,7 @@ function gameOver() {
   playground.addEventListener('click', startBallMovement);
   gameInProgress = false;
   playerScore.innerHTML = '0';
+  sounds.lost.play();
 }
 
 function calculatePropfit(speed) {
