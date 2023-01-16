@@ -6,7 +6,9 @@
   height: 652px;
   border: 1px solid black;
   margin: 0 auto 50px;
-  // cursor: none;
+  cursor: none;
+
+  background-color: rgba(35, 97, 163, 0.6);
 }
 
 .small-div {
@@ -17,4 +19,5 @@
 
 .chosen-div {
   background-color: rgba(0, 0, 0, 0.647);
+  // border-radius: 50%;
 }

@@ -40,7 +40,7 @@ function onSubmitForm(e) {
   inviteForm.classList.add('is-hidden');
   playerDiv.classList.remove('is-hidden');
   playgroundDiv.classList.remove('is-hidden');
-  playerGreet.innerHTML = `Hello, ${userData.name}! Have fun.`;
+  playerGreet.innerHTML = `Hello, ${userData.name || 'Player'}! Have fun.`;
   playerSpeed.innerHTML = speedToText(Number(userData.speed));
   speedForm = userData.speed;
 }
